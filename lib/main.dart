@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +37,7 @@ class _MyPageState extends State<MyPage> {
 
   static const alarmLock = "GateKeeperCartKeyLock78.wav";
   static const alarmUnlock = "unlock-cart.wav";
-  double _value = 0;
+  double _value = 1;
 
   @override
   void dispose() {
@@ -66,53 +65,103 @@ class _MyPageState extends State<MyPage> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
         child: Center(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SleekCircularSlider(
-                  appearance: CircularSliderAppearance(
-                      customWidths: CustomSliderWidths(
-                          trackWidth: 10.0, handlerSize: 10.0),
-                      customColors: CustomSliderColors(trackColor: Colors.red),
-                      infoProperties: InfoProperties(
-                          mainLabelStyle: const TextStyle(color: Colors.red))),
-                  initialValue: 0,
-                  onChange: (value) => {
-                    setState(() {
-                      _value = value;
-                    })
-                  },
-                  min: 0,
-                  max: 100,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Image.asset(
+              'assets/shopping_cart.png',
+              height: 150,
+              width: 150,
+            ),
+            const SizedBox(height: 30),
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
                   children: [
-                    IconButton(
-                        onPressed: () {
-                          playAudioFromSource(alarmLock, _value);
-                        },
-                        icon: const Icon(Icons.lock)),
-                    const SizedBox(
-                      width: 20,
+                    const Text(
+                      "Control de Carros",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          playAudioFromSource(alarmUnlock, _value);
-                        },
-                        icon: const Icon(Icons.lock_open)),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            playAudioFromSource(alarmLock, _value);
+                          },
+                          icon: const Icon(Icons.lock),
+                          label: const Text("Bloquear"),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            playAudioFromSource(alarmUnlock, _value);
+                          },
+                          icon: const Icon(Icons.lock_open),
+                          label: const Text("Desbloquear"),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
+              ),
+            ),
+            const SizedBox(height: 30),
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const Text(
+                      "Volumen",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Slider(
+                      value: _value,
+                      min: 0.0,
+                      max: 1.0,
+                      divisions: 10,
+                      label: "${(_value * 100).toStringAsFixed(0)}%",
+                      onChanged: (value) {
+                        setState(() {
+                          _value = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                const Text(
-                  "Reproduzca el audio cerca de la rueda para que funcione correctamente.",
-                  textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Card(
+                elevation: 2,
+                child: Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Reproduzca el audio cerca de la rueda para que funcione correctamente.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
                 ),
-              ]),
+              ),
+            ),
+          ]),
         ),
       ),
     );
